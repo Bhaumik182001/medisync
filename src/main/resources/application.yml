@@ -1,9 +1,16 @@
 spring:
-    application:
-        name: identity-service
-    data: 
-        mongodb:
-            uri: mongodb://rootadmin:rootpassword@localhost:27017/medisync_identity?authSource=admin
+  application:
+    name: identity-service
+  data: 
+    mongodb:
+      uri: mongodb://rootadmin:rootpassword@localhost:27017/medisync_identity?authSource=admin
 
 server:
-    port: 8081    
+  port: 8081    
+
+application:
+  security:
+    jwt:
+      # This is a 256-bit hex string. In production, this goes into a secure environment variable.
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
