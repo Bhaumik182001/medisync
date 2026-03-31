@@ -10,6 +10,7 @@ spring:
       username: rootadmin
       password: rootpassword
       authentication-database: admin
+      auto-index-creation: true
 
 server:
   port: 8081    

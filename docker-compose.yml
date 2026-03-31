@@ -12,6 +12,27 @@ services:
     volumes:
       - mongodb_data:/data/db
     restart: unless-stopped
+    
+  postgres-core:
+    image: postgres:15-alpine
+    container_name: medisync-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: medisync_core
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    
+  redis-core:
+    image: redis:7-alpine
+    container_name: medisync-redis
+    ports:
+    - "6379:6379"
+    restart: unless-stopped
 
 volumes:
   mongodb_data:
+  postgres_data:
