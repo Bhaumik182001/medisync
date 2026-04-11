@@ -31,6 +31,23 @@ services:
     container_name: medisync-redis
     ports:
     - "6379:6379"
+    restart: unless-stopped 
+    
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: medisync-rabbitmq
+    ports:
+      - "5672:5672"   # The port our Spring Boot app uses to send messages
+      - "15672:15672" # The port for the web-based Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+     
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: medisync-zipkin
+    ports:
+      - "9411:9411"
     restart: unless-stopped
 
 volumes:

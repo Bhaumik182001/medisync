@@ -7,7 +7,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import com.bhaumik18.medisync.dto.AuthenticationResponse;
 import com.bhaumik18.medisync.dto.LoginRequest;
 import com.bhaumik18.medisync.dto.RegisterRequest;
@@ -27,12 +26,21 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 	
 	public AuthenticationResponse register(RegisterRequest request) {
-		var patient  = PatientProfile.builder()
+		
+		// 1. Determine the role. Default to "PATIENT" if none is provided.
+		String assignedRole = "PATIENT";
+		if (request.getRole() != null && !request.getRole().trim().isEmpty()) {
+			// Convert to uppercase just to be safe (e.g., "provider" -> "PROVIDER")
+			assignedRole = request.getRole().toUpperCase(); 
+		}
+
+		// 2. Build the user with the dynamic role
+		var patient = PatientProfile.builder()
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
-				.roles(Set.of("PATIENT"))
+				.roles(Set.of(assignedRole)) // <--- THE FIX IS HERE
 				.build();
 		
 		repository.save(patient);
