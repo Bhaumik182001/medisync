@@ -40,3 +40,7 @@ target/
 .idea/
 *.jar
 /.apt_generated_tests/
+
+# Repomix output
+repomix-output.xml
+repomix-output.txt

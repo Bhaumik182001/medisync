@@ -1,5 +1,5 @@
 # MediSync Identity Service
-[![MediSync CI](https://github.com/Bhaumik182001/medisync/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhaumik182001/medisync-identity/actions)
+[![MediSync CI](https://github.com/Bhaumik182001/medisync/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhaumik182001/medisync/actions)
 
 The **Gatekeeper Identity Service** is the central authentication and authorization microservice for the MediSync healthcare ecosystem. It provides secure, stateless user management, issuing cryptographically signed JSON Web Tokens (JWT) to authenticate requests across the distributed architecture.
 
