@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
 
         // 2. If there is no token, or it doesn't start with "Bearer ", pass it down the chain
-        // (It might be a public endpoint like /register that doesn't need a token)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;

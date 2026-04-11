@@ -33,7 +33,6 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    // --- THE CRUCIAL FIX IS HERE ---
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
         

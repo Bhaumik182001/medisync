@@ -33,8 +33,7 @@ public class MongoConfig {
 
     @Bean
     public MongoClient mongoClient() {
-        // Now it's 100% dynamic, but still perfectly safe from the WARP bug
-        // because the YAML explicitly passes 127.0.0.1
+
         String uri = String.format("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
                 username, password, host, port, database, authSource);
         
