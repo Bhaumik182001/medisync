@@ -39,3 +39,4 @@ target/
 .settings/
 .idea/
 *.jar
+/.apt_generated_tests/
