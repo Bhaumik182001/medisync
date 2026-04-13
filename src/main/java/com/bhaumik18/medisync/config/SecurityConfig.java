@@ -5,13 +5,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -24,25 +28,43 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 1. Disable CSRF because we use stateless JWT tokens, not session cookies
-        	.cors(Customizer.withDefaults())
-        	.csrf(AbstractHttpConfigurer::disable)
+            // 1. Tell Spring Security to use the custom CORS bean below
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            // 2. Disable CSRF
+            .csrf(AbstractHttpConfigurer::disable)
             
-            // 2. Configure endpoint routing
+            // 3. Configure endpoint routing
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**").permitAll() // Anyone can access login and register
-                .anyRequest().authenticated() // Every other endpoint requires a valid JWT
+                .requestMatchers("/api/v1/auth/**", "/api/v1/core/health", "/api/v1/auth/health").permitAll() 
+                .anyRequest().authenticated() 
             )
             
-            // 3. Make the session stateless (Spring won't store user state between requests)
+            // 4. Stateless Sessions
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             
-            // 4. Wire in our custom provider and filter
+            // 5. Wire custom provider and filter
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173", 
+                "https://medisync-frontend-vert.vercel.app"
+        ));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

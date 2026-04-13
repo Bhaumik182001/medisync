@@ -3,7 +3,6 @@ spring:
     name: medisync-identity 
   data: 
     mongodb:
-      # Bypassing the URI parser to force explicit authentication
       host: mongodb         
       port: 27017
       database: medisync_identity
@@ -15,8 +14,19 @@ spring:
 server:
   port: 8081    
 
+# Spring Boot Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+      cors:
+        allowed-origins: "https://medisync-frontend-vert.vercel.app"
+        allowed-methods: "GET,OPTIONS"
+
 application:
   security:
     jwt:
+      # Using your existing key and 24h expiration
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 86400000
